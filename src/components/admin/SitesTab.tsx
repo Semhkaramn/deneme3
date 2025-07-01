@@ -405,8 +405,8 @@ export default function SitesTab() {
                     {renderSiteForm(
                       undefined,
                       handleAdd,
-                      setAddFormLogo,
-                      setAddFormBackground,
+                      (file) => setAddFormLogo(file || ''),
+                      (file) => setAddFormBackground(file || ''),
                       addFormLogo,
                       addFormBackground
                     )}
@@ -446,6 +446,7 @@ export default function SitesTab() {
                             {renderSiteForm(
                               site,
                               (e) => handleEdit(e, site.id),
+                              // Bunu da bul ve düzelt:
                               (file) => setEditFormLogos(prev => ({ ...prev, [site.id]: file || '' })),
                               (file) => setEditFormBackgrounds(prev => ({ ...prev, [site.id]: file || '' })),
                               editFormLogos[site.id] || site.sitepic,
