@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="site-title">Sago Casino | Güvenilir Siteler</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="img/siteicon.png" id="site-favicon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="app.css">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+
+    <!-- Meta tags -->
+    <meta property="og:title" content="" id="og-title" />
+    <meta property="og:description" content="" id="og-description" />
+    <meta property="og:url" content="" id="og-url" />
+    <meta property="og:image" content="" id="og-image" />
+    <meta property="og:type" content="website" />
+</head>
+
+<body>
+    <div id="preloader" style="display: none;">
+        <svg height="300" width="300">
+            <circle class="outer" cx="150" cy="150" r="50"></circle>
+            <circle class="inner" cx="150" cy="150" r="50">
+                <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 150 150"
+                    to="360 150 150" dur="2s" repeatCount="indefinite"></animateTransform>
+            </circle>
+        </svg>
+    </div>
+
+    <!-- Developer Tools Uyarısı -->
+    <div class="dev-warning" id="dev-warning">
+        ⚠️ DEVELOPER TOOLS DETECTED ⚠️<br>
+        ACCESS DENIED
+    </div>
+
+    <div id="app-v-page" style="display: block;">
+        <header>
+            <div class="container">
+                <div class="logo"><img src="" alt="" id="header-logo"></div>
+                <div class="social" id="social-links">
+                    <!-- Social links will be populated from admin config -->
+                </div>
+                <ul class="links" id="header-links">
+                    <!-- Header links will be populated from admin config -->
+                </ul>
+            </div>
+        </header>
+
+        <!-- Left and Right Fix Banners -->
+        <div id="left-fix-banner" style="display: none;"></div>
+        <div id="right-fix-banner" style="display: none;"></div>
+
+        <!-- Scrolling Banner -->
+        <div class="ozel-siteler-banner" id="scrolling-banner-section" style="display: none;">
+            <div class="ozel-siteler-container">
+                <div class="ozel-siteler-slider" id="ozelSitelerSlider">
+                    <div class="slider-content" id="sliderContent" style="animation-play-state: running; transform: translateX(100%);">
+                        <!-- Scrolling banner content will be populated from admin config -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kayan-bant-spacer"></div>
+
+        <div class="container" id="main-container">
+            <!-- Admin Panel Button -->
+            <div style="position: fixed; top: 20px; right: 20px; z-index: 10000;">
+                <a href="/admin" style="
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 25px;
+                    text-decoration: none;
+                    font-weight: bold;
+                    font-size: 14px;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    border: 2px solid rgba(255,255,255,0.1);
+                    backdrop-filter: blur(10px);
+                ">
+                    ⚙️ Admin Panel
+                </a>
+            </div>
+
+            <div id="swiper" style="display: none;">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper" id="slider-wrapper">
+                        <!-- Slider banners will be populated from admin config -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="img-container" id="hover-sites" style="display: none;"></div>
+            <div id="vip-sites" class="row" style="display: none;"></div>
+
+            <div class="row vip banner4" id="additional-vip-sites" style="display: none;">
+                <!-- Additional VIP sites will be populated from admin config -->
+            </div>
+
+            <div id="bottom-banner-section" style="display: none;">
+                <div class="bottom-fixed banner-item">
+                    <div class="button">
+                        <div class="close">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <g id="Edit / Close_Circle">
+                                    <path id="Vector"
+                                        d="M9 9L11.9999 11.9999M11.9999 11.9999L14.9999 14.9999M11.9999 11.9999L9 14.9999M11.9999 11.9999L14.9999 9M12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21Z"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="logo"><img src="" width="150" class="banner-img" crossorigin="anonymous"></div>
+                    <div class="center">
+                        <h1></h1>
+                        <p></p>
+                    </div>
+                    <a href="" target="_blank">GİRİŞ YAP</a>
+                </div>
+            </div>
+
+            <div class="popup-overlay"></div>
+            <div id="popup-banner-section" style="display: none;">
+                <div class="notify-fixed banner-item" style="display: none;">
+                    <div class="button">
+                        <div class="close">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <g id="Edit / Close_Circle">
+                                    <path id="Vector"
+                                        d="M9 9L11.9999 11.9999M11.9999 11.9999L14.9999 14.9999M11.9999 11.9999L9 14.9999M11.9999 11.9999L14.9999 9M12 21C7.02944 21 3 16.9706 3 12 C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21Z"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 style="font-size: 12px; margin: 10px 0px 0px;"></h3>
+                    <div class="logo"><img src="" width="150" class="banner-img" crossorigin="anonymous"></div>
+                    <div class="center" style="margin: 0px;">
+                        <h1 style="margin: 0px;"></h1>
+                    </div>
+                    <small style="margin-bottom: 5px; opacity: 0.5;"></small>
+                    <a href="" target="_blank">GİRİŞ YAP</a>
+                </div>
+            </div>
+
+            <div class="footer-c">
+                <div class="licence" id="footer-licence">
+
+                </div>
+                <a target="_blank" href="" class="cpyrght" id="footer-copyright">
+
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Site Configuration Manager - Admin panelinden gelen ayarları kullanır
+        class SiteManager {
+            constructor() {
+                this.config = this.loadConfig();
+                this.colorThief = new ColorThief();
+                this.loadThemeColors();
+                this.init();
+
+                // Admin panelinden değişiklikleri dinle
+                this.listenForConfigChanges();
+            }
+
+            loadThemeColors() {
+                try {
+                    const savedColors = localStorage.getItem('theme-colors');
+                    if (savedColors) {
+                        const colors = JSON.parse(savedColors);
+                        const root = document.documentElement;
+                        root.style.setProperty('--bg', colors.bg);
+                        root.style.setProperty('--menu', colors.menu);
+                        root.style.setProperty('--card', colors.card);
+                        root.style.setProperty('--card2', colors.card2);
+                    }
+                } catch (error) {
+                    console.error('Theme colors loading error:', error);
+                }
+            }
+
+            loadConfig() {
+                try {
+                    const stored = localStorage.getItem('sago-casino-config');
+                    if (stored) {
+                        return JSON.parse(stored);
+                    }
+                } catch (error) {
+                    console.error('Config yüklenirken hata:', error);
+                }
+
+                // Default config
+                return {
+                    site_config: {
+                        title: "Sago Casino | Güvenilir Siteler",
+                        description: "En güncel ve güvenilir siteler!",
+                        favicon: "img/siteicon.png",
+                        logo: "img/logo.png",
+                        url: "https://www.sagocasino.com"
+                    },
+                    categories_control: {
+                        show_left_fix: false,
+                        show_right_fix: false,
+                        show_vip_sites: false,
+                        show_diamond_sites: false,
+                        show_normal_sites: false,
+                        show_animated_hover: false,
+                        show_slider_banner: false,
+                        show_scrolling_banner: false,
+                        show_bottom_banner: false,
+                        show_popup_banner: false
+                    },
+                    social_links: {
+                        telegram_main: "",
+                        telegram_announcement: "",
+                        telegram_chat: "",
+                        instagram: "",
+                        youtube: ""
+                    },
+                    header_links: [],
+                    popup_settings: {
+                        enabled: false,
+                        delay: 3000,
+                        title: "",
+                        main_text: "",
+                        sub_text: "",
+                        site_ref: ""
+                    },
+                    footer: {
+                        licence_text: "",
+                        copyright_text: "",
+                        copyright_url: ""
+                    },
+                    sites: [],
+                    categories: {
+                        left_fix: [],
+                        right_fix: [],
+                        scrolling_banner: [],
+                        slider_banners: [],
+                        animated_hover: [],
+                        vip_sites: [],
+                        bottom_banner: {
+                            sites: [],
+                            rotation_interval: 4000
+                        }
+                    }
+                };
+            }
+
+            listenForConfigChanges() {
+                // Storage event ile admin panelinden gelen değişiklikleri dinle
+                window.addEventListener('storage', (e) => {
+                    if (e.key === 'sago-casino-config') {
+                        this.config = this.loadConfig();
+                        this.updateSite();
+                    }
+                });
+
+                // Aynı sekme içinde değişiklikleri dinle (polling)
+                setInterval(() => {
+                    const newConfig = this.loadConfig();
+                    const currentConfigStr = JSON.stringify(this.config);
+                    const newConfigStr = JSON.stringify(newConfig);
+
+                    if (currentConfigStr !== newConfigStr) {
+                        this.config = newConfig;
+                        this.updateSite();
+                    }
+                }, 1000);
+            }
+
+            init() {
+                this.updateSiteMetaInfo();
+                this.updateHeader();
+                this.updateSectionsVisibility();
+                this.loadSections();
+                this.updateFooter();
+                this.initializeUIComponents();
+            }
+
+            updateSite() {
+                this.updateSiteMetaInfo();
+                this.updateHeader();
+                this.updateSectionsVisibility();
+                this.loadSections();
+                this.updateFooter();
+                this.initializeUIComponents();
+                console.log('Site güncellendi!');
+            }
+
+            updateSiteMetaInfo() {
+                document.getElementById('site-title').textContent = this.config.site_config.title;
+                document.getElementById('site-favicon').href = this.config.site_config.favicon;
+                document.getElementById('og-title').content = this.config.site_config.title;
+                document.getElementById('og-description').content = this.config.site_config.description;
+                document.getElementById('og-url').content = this.config.site_config.url;
+                document.getElementById('og-image').content = this.config.site_config.url + '/' + this.config.site_config.favicon;
+                document.title = this.config.site_config.title;
+            }
+
+            updateHeader() {
+                // Logo
+                document.getElementById('header-logo').src = this.config.site_config.logo;
+
+                // Social Links
+                const socialContainer = document.getElementById('social-links');
+                socialContainer.innerHTML = '';
+
+                if (this.config.social_links.telegram_main) {
+                    socialContainer.innerHTML += `
+                        <a href="${this.config.social_links.telegram_main}" class="social-button telegram" target="_blank">
+                            <svg viewBox="0 0 48 48" fill="none">
+                                <path d="M41.4193 7.30899C41.4193 7.30899 45.3046 5.79399 44.9808 9.47328C44.8729 10.9883 43.9016 16.2908 43.1461 22.0262L40.5559 39.0159C40.5559 39.0159 40.3401 41.5048 38.3974 41.9377C36.4547 42.3705 33.5408 40.4227 33.0011 39.9898C32.5694 39.6652 24.9068 34.7955 22.2086 32.4148C21.4531 31.7655 20.5897 30.4669 22.3165 28.9519L33.6487 18.1305C34.9438 16.8319 36.2389 13.8019 30.8426 17.4812L15.7331 27.7616C15.7331 27.7616 14.0063 28.8437 10.7686 27.8698L3.75342 25.7055C3.75342 25.7055 1.16321 24.0823 5.58815 22.459C16.3807 17.3729 29.6555 12.1786 41.4193 7.30899Z"></path>
+                            </svg>
+                            Telegram
+                        </a>
+                    `;
+                }
+
+                if (this.config.social_links.instagram) {
+                    socialContainer.innerHTML += `
+                        <a href="${this.config.social_links.instagram}" class="social-button instagram" target="_blank">
+                            <svg viewBox="0 0 20 20" version="1.1">
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Dribbble-Light-Preview" transform="translate(-340.000000, -7439.000000)">
+                                        <g id="icons" transform="translate(56.000000, 160.000000)">
+                                <path d="M289.869652,7279.12273 C288.241769,7279.19618 286.830805,7279.5942 285.691486,7280.72871 C284.548187,7281.86918 284.155147,7283.28558 284.081514,7284.89653 C284.035742,7285.90201 283.768077,7293.49818 284.544207,7295.49028 C285.067597,7296.83422 286.098457,7297.86749 287.454694,7298.39256 C288.087538,7298.63872 288.809936,7298.80547 289.869652,7298.85411 C298.730467,7299.25511 302.015089,7299.03674 303.400182,7295.49028 C303.645956,7294.859 303.815113,7294.1374 303.86188,7293.08031 C304.26686,7284.19677 303.796207,7282.27117 302.251908,7280.72871 C301.027016,7279.50685 299.5862,7278.67508 289.869652,7279.12273 M289.951245,7297.06748 C288.981083,7297.0238 288.454707,7296.86201 288.103459,7296.72603 C287.219865,7296.3826 286.556174,7295.72155 286.214876,7294.84312 C285.623823,7293.32944 285.819846,7286.14023 285.872583,7284.97693 C285.924325,7283.83745 286.155174,7282.79624 286.959165,7281.99226 C287.954203,7280.99968 289.239792,7280.51332 297.993144,7280.90837 C299.135448,7280.95998 300.179243,7281.19026 300.985224,7281.99226 C301.980262,7282.98483 302.473801,7284.28014 302.071806,7292.99991 C302.028024,7293.96767 301.865833,7294.49274 301.729513,7294.84312 C300.829003,7297.15085 298.757333,7297.47145 289.951245,7297.06748 M298.089663,7283.68956 C298.089663,7284.34665 298.623998,7284.88065 299.283709,7284.88065 C299.943419,7284.88065 300.47875,7284.34665 300.47875,7283.68956 C300.47875,7283.03248 299.943419,7282.49847 299.283709,7282.49847 C298.623998,7282.49847 298.089663,7283.03248 298.089663,7283.68956 M288.862673,7288.98792 C288.862673,7291.80286 291.150266,7294.08479 293.972194,7294.08479 C296.794123,7294.08479 299.081716,7291.80286 299.081716,7288.98792 C299.081716,7286.17298 296.794123,7283.89205 293.972194,7283.89205 C291.150266,7283.89205 288.862673,7286.17298 288.862673,7288.98792 M290.655732,7288.98792 C290.655732,7287.16159 292.140329,7285.67967 293.972194,7285.67967 C295.80406,7285.67967 297.288657,7287.16159 297.288657,7288.98792 C297.288657,7290.81525 295.80406,7292.29716 293.972194,7292.29716 C292.140329,7292.29716 290.655732,7290.81525 290.655732,7288.98792" id="instagram-[#167]">
+                                </path>
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                            Instagram
+                        </a>
+                    `;
+                }
+
+                // Header Links
+                const headerLinks = document.getElementById('header-links');
+                headerLinks.innerHTML = '';
+
+                this.config.header_links.forEach(link => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <a target="_blank" href="${link.url}">
+                            <div class="left"><img src="${link.icon}" width="30"></div>
+                            <div class="right">
+                                <p>${link.title}</p> <small>${link.subtitle}</small>
+                            </div>
+                        </a>
+                    `;
+                    headerLinks.appendChild(li);
+                });
+            }
+
+            updateSectionsVisibility() {
+                const controls = this.config.categories_control;
+
+                document.getElementById('left-fix-banner').style.display = controls.show_left_fix ? 'block' : 'none';
+                document.getElementById('right-fix-banner').style.display = controls.show_right_fix ? 'block' : 'none';
+                document.getElementById('scrolling-banner-section').style.display = controls.show_scrolling_banner ? 'block' : 'none';
+
+                const swiperElement = document.getElementById('swiper');
+                if (controls.show_slider_banner) {
+                    swiperElement.style.display = 'block';
+                } else {
+                    swiperElement.style.display = 'none';
+                }
+
+                document.getElementById('hover-sites').style.display = controls.show_animated_hover ? 'flex' : 'none';
+                document.getElementById('vip-sites').style.display = controls.show_vip_sites ? 'flex' : 'none';
+                document.getElementById('additional-vip-sites').style.display = controls.show_vip_sites ? 'flex' : 'none';
+                document.getElementById('bottom-banner-section').style.display = controls.show_bottom_banner ? 'block' : 'none';
+                document.getElementById('popup-banner-section').style.display = controls.show_popup_banner ? 'block' : 'none';
+            }
+
+            loadSections() {
+                if (this.config.categories_control.show_left_fix) {
+                    this.loadLeftFixBanner();
+                }
+                if (this.config.categories_control.show_right_fix) {
+                    this.loadRightFixBanner();
+                }
+                if (this.config.categories_control.show_slider_banner) {
+                    this.loadSliderBanners();
+                }
+                if (this.config.categories_control.show_animated_hover) {
+                    this.loadAnimatedHoverSites();
+                }
+                if (this.config.categories_control.show_vip_sites) {
+                    this.loadVipSites();
+                }
+                if (this.config.categories_control.show_scrolling_banner) {
+                    this.loadScrollingBanner();
+                }
+                if (this.config.categories_control.show_bottom_banner) {
+                    this.setupBottomBanner();
+                }
+                if (this.config.categories_control.show_popup_banner) {
+                    this.setupPopupBanner();
+                }
+            }
+
+            findSite(siteName) {
+                return this.config.sites ? this.config.sites.find(site => site.site === siteName) : null;
+            }
+
+            loadLeftFixBanner() {
+                if (!this.config.categories.left_fix || !this.config.categories.left_fix.length) return;
+
+                const siteName = this.config.categories.left_fix[0];
+                const site = this.findSite(siteName);
+                if (!site) return;
+
+                const leftFixBanner = document.getElementById('left-fix-banner');
+                leftFixBanner.innerHTML = `
+                    <a href="${site.url}" target="_blank" class="fix-side left banner-item">
+                        <div class="top">
+                            <img src="${site.sitepic}" class="banner-img" crossorigin="anonymous">
+                        </div>
+                        <div class="center">
+                            <div class="stars">
+                                <img src="img/star.png">
+                            </div>
+                            <img src="${site.sitepic}" class="banner-img" crossorigin="anonymous">
+                            <div class="promo">
+                                <span>${site.desc[0]}</span><br>${site.desc[1]}
+                            </div>
+                            <div class="button">${site.button_text}</div>
+                        </div>
+                        <div class="bottom">
+                            <img src="${site.sitepic}" class="banner-img" crossorigin="anonymous">
+                        </div>
+                    </a>
+                `;
+                leftFixBanner.style.display = 'block';
+                leftFixBanner.style.setProperty('--site-color', site.color);
+            }
+
+            loadRightFixBanner() {
+                if (!this.config.categories.right_fix || !this.config.categories.right_fix.length) return;
+
+                const siteName = this.config.categories.right_fix[0];
+                const site = this.findSite(siteName);
+                if (!site) return;
+
+                const rightFixBanner = document.getElementById('right-fix-banner');
+                rightFixBanner.innerHTML = `
+                    <a href="${site.url}" target="_blank" class="fix-side right banner-item">
+                        <div class="top">
+                            <img src="${site.sitepic}" class="banner-img" crossorigin="anonymous">
+                        </div>
+                        <div class="center">
+                            <div class="stars">
+                                <img src="img/star.png">
+                            </div>
+                            <img src="${site.sitepic}" class="banner-img" crossorigin="anonymous">
+                            <div class="promo">
+                                <span>${site.desc[0]}</span><br>${site.desc[1]}
+                            </div>
+                            <div class="button">${site.button_text}</div>
+                        </div>
+                        <div class="bottom">
+                            <img src="${site.sitepic}" class="banner-img" crossorigin="anonymous">
+                        </div>
+                    </a>
+                `;
+                rightFixBanner.style.display = 'block';
+                rightFixBanner.style.setProperty('--site-color', site.color);
+            }
+
+            loadSliderBanners() {
+                const sliderWrapper = document.getElementById('slider-wrapper');
+                sliderWrapper.innerHTML = '';
+
+                this.config.categories.slider_banners.forEach(siteName => {
+                    const site = this.findSite(siteName);
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide';
+                    slide.innerHTML = `
+                        <a href="${site ? site.url : '#'}" target="_blank">
+                            <img src="img/anabanner/${siteName}.jpg" width="100%">
+                        </a>
+                    `;
+                    sliderWrapper.appendChild(slide);
+                });
+            }
+
+            loadAnimatedHoverSites() {
+                if (!this.config.categories.animated_hover || !this.config.categories.animated_hover.length) return;
+
+                const hoverSites = document.getElementById("hover-sites");
+                hoverSites.innerHTML = '';
+
+                this.config.categories.animated_hover.forEach(siteName => {
+                    const site = this.findSite(siteName);
+                    if (!site) return;
+
+                    const div = document.createElement('div');
+                    div.className = 'img-box';
+                    const backgroundImg = site.background_image || '';
+                    div.innerHTML = `
+                        <img src="${backgroundImg}" class="background-img">
+                        <a href="${site.url}" target="_blank">
+                            <img src="${site.sitepic}" class="overlay-img">
+                            <div class="hovertext">${site.desc[0]}<br>${site.desc[1]}</div>
+                        </a>
+                    `;
+                    div.style.setProperty('--site-color', site.color);
+                    hoverSites.appendChild(div);
+                });
+            }
+
+            loadVipSites() {
+                if (!this.config.categories.vip_sites || !this.config.categories.vip_sites.length) return;
+
+                const vipContainer = document.getElementById('additional-vip-sites');
+                vipContainer.innerHTML = '';
+
+                this.config.categories.vip_sites.forEach(siteName => {
+                    const site = this.findSite(siteName);
+                    if (!site) return;
+
+                    const col = document.createElement('div');
+                    col.className = 'col';
+                    col.innerHTML = `
+                        <a target="_blank" href="${site.url}" class="item banner-item">
+                            <div class="left">
+                                <img src="${site.sitepic}" width="150" class="banner-img" crossorigin="anonymous">
+                                <div class="text">
+                                    ${site.desc[0]}
+                                    <div><small>${site.desc[1]}</small></div>
+                                </div>
+                                <div class="button">${site.button_text}</div>
+                            </div>
+                            <div class="vip-img"><img src="img/vip.png" width="100"></div>
+                        </a>
+                    `;
+                    col.style.setProperty('--site-color', site.color);
+                    vipContainer.appendChild(col);
+                });
+            }
+
+            loadScrollingBanner() {
+                if (!this.config.categories.scrolling_banner || !this.config.categories.scrolling_banner.length) return;
+
+                const sliderContent = document.getElementById('sliderContent');
+                sliderContent.innerHTML = '';
+
+                this.config.categories.scrolling_banner.forEach(siteName => {
+                    const site = this.findSite(siteName);
+                    if (!site) return;
+
+                    const a = document.createElement('a');
+                    a.href = site.url;
+                    a.target = '_blank';
+                    a.className = 'site-item';
+                    a.innerHTML = `
+                        <img src="${site.sitepic}" alt="Kayan Bant">
+                        <div class="giris-btn">${site.button_text}</div>
+                    `;
+                    a.style.setProperty('--band-color', site.color);
+                    sliderContent.appendChild(a);
+                });
+            }
+
+            setupBottomBanner() {
+                if (!this.config.categories.bottom_banner.sites || !this.config.categories.bottom_banner.sites.length) return;
+
+                let currentIndex = 0;
+
+                const updateFooterBanner = () => {
+                    const footerBannerContainer = document.querySelector('.bottom-fixed.banner-item');
+                    if (!footerBannerContainer) return;
+
+                    const siteName = this.config.categories.bottom_banner.sites[currentIndex];
+                    const site = this.findSite(siteName);
+                    if (!site) return;
+
+                    currentIndex = (currentIndex + 1) % this.config.categories.bottom_banner.sites.length;
+
+                    const logoImg = footerBannerContainer.querySelector('.logo img');
+                    if (logoImg) logoImg.src = site.sitepic;
+
+                    const headerEl = footerBannerContainer.querySelector('h1');
+                    if (headerEl) headerEl.textContent = site.desc[0];
+
+                    const textEl = footerBannerContainer.querySelector('p');
+                    if (textEl) textEl.textContent = site.desc[1];
+
+                    const linkEl = footerBannerContainer.querySelector('a');
+                    if (linkEl) linkEl.href = site.url;
+
+                    footerBannerContainer.style.setProperty('--site-color', site.color);
+                };
+
+                updateFooterBanner();
+                setInterval(updateFooterBanner, this.config.categories.bottom_banner.rotation_interval || 4000);
+            }
+
+            setupPopupBanner() {
+                if (!this.config.popup_settings.enabled) return;
+
+                const popupBanner = document.querySelector('.notify-fixed.banner-item');
+                if (popupBanner) {
+                    const titleEl = popupBanner.querySelector('h3');
+                    const mainTextEl = popupBanner.querySelector('h1');
+                    const subTextEl = popupBanner.querySelector('small');
+                    const linkEl = popupBanner.querySelector('a');
+                    const imgEl = popupBanner.querySelector('.banner-img');
+
+                    if (titleEl) titleEl.textContent = this.config.popup_settings.title;
+                    if (mainTextEl) mainTextEl.textContent = this.config.popup_settings.main_text;
+                    if (subTextEl) subTextEl.textContent = this.config.popup_settings.sub_text;
+
+                    const site = this.findSite(this.config.popup_settings.site_ref);
+                    if (site) {
+                        if (linkEl) linkEl.href = site.url;
+                        if (imgEl) imgEl.src = site.sitepic;
+                        popupBanner.style.setProperty('--site-color', site.color);
+                    }
+                }
+
+                setTimeout(() => {
+                    const notifyFixed = document.querySelector('.notify-fixed');
+                    const popupOverlay = document.querySelector('.popup-overlay');
+
+                    if (notifyFixed) {
+                        notifyFixed.style.display = 'flex';
+                        if (popupOverlay) popupOverlay.style.display = 'block';
+                    }
+                }, this.config.popup_settings.delay);
+            }
+
+            updateFooter() {
+                // Footer artık sabit
+                document.getElementById('footer-licence').textContent = 'Sago Casino tüm hakları saklıdır.';
+                const copyrightLink = document.getElementById('footer-copyright');
+                copyrightLink.textContent = 'This App Provided By AFK';
+                copyrightLink.href = 'https://t.me/randykatleden';
+            }
+
+            initializeUIComponents() {
+                if (document.querySelector('.swiper-container')) {
+                    var swiper = new Swiper('.swiper-container', {
+                        slidesPerView: 1,
+                        spaceBetween: 30,
+                        loop: true,
+                        pagination: {
+                            el: '.swiper-pagination',
+                            clickable: true,
+                        },
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        autoplay: {
+                            delay: 5000,
+                            disableOnInteraction: false,
+                        },
+                    });
+                }
+
+                this.setupScrollHandling();
+                this.setupEventListeners();
+                this.checkMobile();
+            }
+
+            setupScrollHandling() {
+                var navTop = 100;
+                const scrollingBanner = document.querySelector('.ozel-siteler-banner');
+                const kayanBantSpacer = document.querySelector('.kayan-bant-spacer');
+
+                const handleScroll = () => {
+                    if (window.scrollY >= navTop) {
+                        document.querySelector('#app-v-page').classList.add('is-fixed');
+                        if (scrollingBanner) {
+                            scrollingBanner.classList.add('fixed');
+                            if (kayanBantSpacer) {
+                                kayanBantSpacer.classList.add('active');
+                            }
+                        }
+                    } else {
+                        document.querySelector('#app-v-page').classList.remove('is-fixed');
+                        if (scrollingBanner) {
+                            scrollingBanner.classList.remove('fixed');
+                            if (kayanBantSpacer) {
+                                kayanBantSpacer.classList.remove('active');
+                            }
+                        }
+                    }
+                };
+
+                window.addEventListener('scroll', handleScroll);
+                handleScroll();
+            }
+
+            setupEventListeners() {
+                const sliderContent = document.getElementById('sliderContent');
+                if (sliderContent) {
+                    sliderContent.addEventListener('mouseenter', function() {
+                        this.style.animationPlayState = 'paused';
+                    });
+
+                    sliderContent.addEventListener('mouseleave', function() {
+                        this.style.animationPlayState = 'running';
+                    });
+                }
+
+                document.querySelectorAll('.close').forEach(function(closeBtn) {
+                    closeBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const popupOverlay = document.querySelector('.popup-overlay');
+                        const element = this.closest('.bottom-fixed, .notify-fixed');
+                        element.style.display = 'none';
+
+                        if (element.classList.contains('notify-fixed') && popupOverlay) {
+                            popupOverlay.style.display = 'none';
+                        }
+                    });
+                });
+
+                document.querySelector('.popup-overlay')?.addEventListener('click', function() {
+                    const notifyFixed = document.querySelector('.notify-fixed');
+                    if (notifyFixed) {
+                        notifyFixed.style.display = 'none';
+                        this.style.display = 'none';
+                    }
+                });
+
+                window.addEventListener('resize', () => {
+                    this.checkMobile();
+                });
+            }
+
+            checkMobile() {
+                const isMobile = Math.min(window.screen.width, window.screen.height) < 768 || navigator.userAgent.indexOf("Mobi") > -1;
+
+                if (isMobile) {
+                    document.getElementById('app-v-page').classList.add('mobile');
+                } else {
+                    document.getElementById('app-v-page').classList.remove('mobile');
+                }
+            }
+        }
+
+        // Sayfa yüklendiğinde site manager'ı başlat
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('preloader').style.display = 'none';
+            document.getElementById('app-v-page').style.display = 'block';
+
+            window.siteManager = new SiteManager();
+        });
+    </script>
+</body>
+</html>
