@@ -7,41 +7,34 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Palette, RotateCcw, Save } from 'lucide-react';
-
-interface ThemeColors {
-  bg: string;
-  menu: string;
-  card: string;
-  card2: string;
-}
+import { useConfig } from '@/hooks/use-config';
+import type { ThemeColors } from '@/lib/types';
 
 export default function ThemeTab() {
-  const [colors, setColors] = useState<ThemeColors>({
-    bg: '#0E184E',
-    menu: '#172261',
-    card: '#162160',
-    card2: '#111C4F'
-  });
+  const { config, updateThemeColors } = useConfig();
+
+  // Local state for theme colors (no auto-save)
+  const [colors, setColors] = useState<ThemeColors>(config.theme_colors);
 
   const [credentials, setCredentials] = useState({
     username: 'admin',
     password: 'admin123'
   });
 
-  // Load colors and credentials from localStorage
+  // Load admin credentials from localStorage
   useEffect(() => {
-    const savedColors = localStorage.getItem('theme-colors');
-    if (savedColors) {
-      setColors(JSON.parse(savedColors));
-    }
-
     const savedUsername = localStorage.getItem('admin-username');
     const savedPassword = localStorage.getItem('admin-password');
     if (savedUsername) setCredentials(prev => ({ ...prev, username: savedUsername }));
     if (savedPassword) setCredentials(prev => ({ ...prev, password: savedPassword }));
   }, []);
 
-  // Apply colors to CSS variables
+  // Update local colors when config changes
+  useEffect(() => {
+    setColors(config.theme_colors);
+  }, [config.theme_colors]);
+
+  // Apply colors to CSS variables (live preview)
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty('--bg', colors.bg);
@@ -51,10 +44,12 @@ export default function ThemeTab() {
   }, [colors]);
 
   const handleColorChange = (colorKey: keyof ThemeColors, value: string) => {
-    const newColors = { ...colors, [colorKey]: value };
-    setColors(newColors);
-    localStorage.setItem('theme-colors', JSON.stringify(newColors));
-    toast.success(`${getColorName(colorKey)} rengi güncellendi`);
+    setColors(prev => ({ ...prev, [colorKey]: value }));
+  };
+
+  const handleThemeSave = async () => {
+    await updateThemeColors(colors);
+    toast.success('Tema renkleri kaydedildi');
   };
 
   const handleCredentialsSubmit = (e: React.FormEvent) => {
@@ -64,16 +59,16 @@ export default function ThemeTab() {
     toast.success('Giriş bilgileri güncellendi');
   };
 
-  const resetToDefaults = () => {
+  const resetToDefaults = async () => {
     if (confirm('Tema renkleri varsayılan değerlere sıfırlanacak. Emin misiniz?')) {
-      const defaultColors = {
+      const defaultColors: ThemeColors = {
         bg: '#0E184E',
         menu: '#172261',
         card: '#162160',
         card2: '#111C4F'
       };
       setColors(defaultColors);
-      localStorage.setItem('theme-colors', JSON.stringify(defaultColors));
+      await updateThemeColors(defaultColors);
       toast.success('Tema renkleri sıfırlandı');
     }
   };
@@ -86,6 +81,10 @@ export default function ThemeTab() {
       card2: 'İkinci Kart'
     };
     return names[key];
+  };
+
+  const hasChanges = () => {
+    return JSON.stringify(colors) !== JSON.stringify(config.theme_colors);
   };
 
   return (
@@ -132,12 +131,33 @@ export default function ThemeTab() {
             ))}
           </div>
 
+          {/* Action Buttons */}
           <div className="flex gap-3">
-            <Button onClick={resetToDefaults} variant="outline" className="border-slate-600 text-white hover:bg-slate-700">
+            <Button
+              onClick={handleThemeSave}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={!hasChanges()}
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Tema Renklerini Kaydet
+            </Button>
+            <Button
+              onClick={resetToDefaults}
+              variant="outline"
+              className="border-slate-600 text-white hover:bg-slate-700"
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               Varsayılana Sıfırla
             </Button>
           </div>
+
+          {hasChanges() && (
+            <div className="p-3 bg-yellow-900/20 border border-yellow-600/30 rounded-lg">
+              <p className="text-yellow-200 text-sm">
+                ⚠️ Değişiklikleri kaydetmeyi unutmayın!
+              </p>
+            </div>
+          )}
 
           {/* Live Preview */}
           <div className="mt-6 p-4 rounded-lg border border-slate-600" style={{ backgroundColor: colors.bg }}>
@@ -191,7 +211,7 @@ export default function ThemeTab() {
                 />
               </div>
             </div>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
               <Save className="w-4 h-4 mr-2" />
               Giriş Bilgilerini Kaydet
             </Button>
@@ -205,11 +225,11 @@ export default function ThemeTab() {
           <div>
             <h4 className="text-purple-200 font-medium mb-2">Tema Bilgileri</h4>
             <ul className="text-purple-100 text-sm space-y-1">
-              <li>• Renk değişiklikleri anında tüm sitede uygulanır</li>
+              <li>• Renk değişiklikleri canlı önizlemede görülür</li>
+              <li>• Kaydet butonuna basana kadar değişiklikler kalıcı olmaz</li>
               <li>• CSS değişkenleri --bg, --menu, --card, --card2 güncellenir</li>
               <li>• Giriş bilgileri değişikliği anında etkinleşir</li>
               <li>• Eski oturumlar otomatik olarak sonlandırılır</li>
-              <li>• Tüm değişiklikler localStorage'da saklanır</li>
             </ul>
           </div>
         </div>

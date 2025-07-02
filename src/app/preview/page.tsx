@@ -1,15 +1,26 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ConfigStore } from '@/lib/config-store';
+import { GlobalConfigStore } from '@/lib/global-config-store';
 import type { Configuration } from '@/lib/types';
 
 export default function PreviewPage() {
   const [config, setConfig] = useState<Configuration | null>(null);
 
   useEffect(() => {
-    const loadedConfig = ConfigStore.getConfig();
-    setConfig(loadedConfig);
+    const loadConfig = async () => {
+      try {
+        const loadedConfig = await GlobalConfigStore.getConfig();
+        setConfig(loadedConfig);
+      } catch (error) {
+        console.error('Preview config loading error:', error);
+        // Fallback to local config
+        const localConfig = GlobalConfigStore.getLocalConfig();
+        setConfig(localConfig);
+      }
+    };
+
+    loadConfig();
   }, []);
 
   useEffect(() => {

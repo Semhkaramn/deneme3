@@ -1,70 +1,106 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import type { Configuration, Site, HeaderLink } from '@/lib/types';
-import { ConfigStore } from '@/lib/config-store';
+import type { Configuration, Site, HeaderLink, ThemeColors } from '@/lib/types';
+import { GlobalConfigStore } from '@/lib/global-config-store';
+import { defaultConfig } from '@/lib/default-config';
 
 export function useConfig() {
-  const [config, setConfig] = useState<Configuration>(() => ConfigStore.getConfig());
+  const [config, setConfig] = useState<Configuration>(() => GlobalConfigStore.getLocalConfig());
+  const [isLoading, setIsLoading] = useState(true);
 
-  const saveConfig = (newConfig: Configuration) => {
+  // Load config on mount
+  useEffect(() => {
+    const loadConfig = async () => {
+      setIsLoading(true);
+      try {
+        const loadedConfig = await GlobalConfigStore.getConfig();
+        setConfig(loadedConfig);
+      } catch (error) {
+        console.error('Config loading error:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadConfig();
+
+    // Start auto-sync
+    GlobalConfigStore.startAutoSync();
+  }, []);
+
+  const saveConfig = async (newConfig: Configuration) => {
     setConfig(newConfig);
-    ConfigStore.saveConfig(newConfig);
+    await GlobalConfigStore.saveConfig(newConfig);
   };
 
-  const updateSiteConfig = (updates: Partial<Configuration['site_config']>) => {
+  const updateSiteConfig = async (updates: Partial<Configuration['site_config']>) => {
     const newConfig = {
       ...config,
       site_config: { ...config.site_config, ...updates }
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const updateCategoriesControl = (updates: Partial<Configuration['categories_control']>) => {
+  const updateThemeColors = async (updates: Partial<ThemeColors>) => {
+    const newConfig = {
+      ...config,
+      theme_colors: { ...config.theme_colors, ...updates }
+    };
+    await saveConfig(newConfig);
+  };
+
+  const updateCategoriesControl = async (updates: Partial<Configuration['categories_control']>) => {
     const newConfig = {
       ...config,
       categories_control: { ...config.categories_control, ...updates }
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const updateSocialLinks = (updates: Partial<Configuration['social_links']>) => {
+  const updateSocialLinks = async (updates: Partial<Configuration['social_links']>) => {
     const newConfig = {
       ...config,
       social_links: { ...config.social_links, ...updates }
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const updatePopupSettings = (updates: Partial<Configuration['popup_settings']>) => {
+  const updatePopupSettings = async (updates: Partial<Configuration['popup_settings']>) => {
     const newConfig = {
       ...config,
       popup_settings: { ...config.popup_settings, ...updates }
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
+  const updateAdminSettings = async (updates: Partial<Configuration['admin_settings']>) => {
+    const newConfig = {
+      ...config,
+      admin_settings: { ...config.admin_settings, ...updates }
+    };
+    await saveConfig(newConfig);
+  };
 
-
-  const addSite = (site: Site) => {
+  const addSite = async (site: Site) => {
     const newConfig = {
       ...config,
       sites: [...config.sites, site]
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const updateSite = (siteId: string, updates: Partial<Site>) => {
+  const updateSite = async (siteId: string, updates: Partial<Site>) => {
     const newConfig = {
       ...config,
       sites: config.sites.map(site =>
         site.id === siteId ? { ...site, ...updates } : site
       )
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const deleteSite = (siteId: string) => {
+  const deleteSite = async (siteId: string) => {
     const newConfig = {
       ...config,
       sites: config.sites.filter(site => site.id !== siteId),
@@ -82,49 +118,61 @@ export function useConfig() {
         }
       }
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const addHeaderLink = (link: HeaderLink) => {
+  const addHeaderLink = async (link: HeaderLink) => {
     const newConfig = {
       ...config,
       header_links: [...config.header_links, link]
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const updateHeaderLink = (linkId: string, updates: Partial<HeaderLink>) => {
+  const updateHeaderLink = async (linkId: string, updates: Partial<HeaderLink>) => {
     const newConfig = {
       ...config,
       header_links: config.header_links.map(link =>
         link.id === linkId ? { ...link, ...updates } : link
       )
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const deleteHeaderLink = (linkId: string) => {
+  const deleteHeaderLink = async (linkId: string) => {
     const newConfig = {
       ...config,
       header_links: config.header_links.filter(link => link.id !== linkId)
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const updateCategoryOrder = (category: keyof Configuration['categories'], newOrder: string[]) => {
+  const updateCategoryOrder = async (category: keyof Configuration['categories'], newOrder: string[]) => {
     if (category === 'bottom_banner') return;
+
+    // Apply site limits
+    const limits = config.site_limits;
+    let limitedOrder = newOrder;
+
+    if (category === 'left_fix' && newOrder.length > limits.left_fix) {
+      limitedOrder = newOrder.slice(0, limits.left_fix);
+    } else if (category === 'right_fix' && newOrder.length > limits.right_fix) {
+      limitedOrder = newOrder.slice(0, limits.right_fix);
+    } else if (category === 'animated_hover' && newOrder.length > limits.animated_hover) {
+      limitedOrder = newOrder.slice(0, limits.animated_hover);
+    }
 
     const newConfig = {
       ...config,
       categories: {
         ...config.categories,
-        [category]: newOrder
+        [category]: limitedOrder
       }
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const updateBottomBannerOrder = (newOrder: string[]) => {
+  const updateBottomBannerOrder = async (newOrder: string[]) => {
     const newConfig = {
       ...config,
       categories: {
@@ -135,36 +183,52 @@ export function useConfig() {
         }
       }
     };
-    saveConfig(newConfig);
+    await saveConfig(newConfig);
   };
 
-  const exportConfig = () => {
-    return ConfigStore.exportConfig();
+  const canAddToCategory = (category: string, currentCount: number): boolean => {
+    const limits = config.site_limits;
+    switch (category) {
+      case 'left_fix':
+        return currentCount < limits.left_fix;
+      case 'right_fix':
+        return currentCount < limits.right_fix;
+      case 'animated_hover':
+        return currentCount < limits.animated_hover;
+      default:
+        return true;
+    }
   };
 
-  const importConfig = (jsonString: string) => {
-    if (ConfigStore.importConfig(jsonString)) {
-      setConfig(ConfigStore.getConfig());
+  const exportConfig = async () => {
+    return await GlobalConfigStore.exportConfig();
+  };
+
+  const importConfig = async (jsonString: string) => {
+    const success = await GlobalConfigStore.importConfig(jsonString);
+    if (success) {
+      const newConfig = await GlobalConfigStore.getConfig();
+      setConfig(newConfig);
       return true;
     }
     return false;
   };
 
-  const resetConfig = () => {
-    ConfigStore.resetConfig();
-    setConfig(ConfigStore.getConfig());
+  const resetConfig = async () => {
+    await GlobalConfigStore.resetConfig();
+    const newConfig = await GlobalConfigStore.getConfig();
+    setConfig(newConfig);
   };
-
-  useEffect(() => {
-    setConfig(ConfigStore.getConfig());
-  }, []);
 
   return {
     config,
+    isLoading,
     updateSiteConfig,
+    updateThemeColors,
     updateCategoriesControl,
     updateSocialLinks,
     updatePopupSettings,
+    updateAdminSettings,
     addSite,
     updateSite,
     deleteSite,
@@ -173,6 +237,7 @@ export function useConfig() {
     deleteHeaderLink,
     updateCategoryOrder,
     updateBottomBannerOrder,
+    canAddToCategory,
     exportConfig,
     importConfig,
     resetConfig

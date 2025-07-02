@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { FileUpload } from '@/components/ui/file-upload';
 import { useConfig } from '@/hooks/use-config';
 import type { HeaderLink } from '@/lib/types';
 import { toast } from 'sonner';
@@ -16,44 +17,60 @@ export default function HeaderLinksTab() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const handleAdd = (e: React.FormEvent<HTMLFormElement>) => {
+  // Upload states
+  const [addFormIcon, setAddFormIcon] = useState<string>('');
+  const [editFormIcons, setEditFormIcons] = useState<Record<string, string>>({});
+
+  const handleAdd = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+
+    if (!addFormIcon) {
+      toast.error('Lütfen ikon görseli seçin');
+      return;
+    }
 
     const newLink: HeaderLink = {
       id: Date.now().toString(),
       title: formData.get('title') as string,
       subtitle: formData.get('subtitle') as string,
       url: formData.get('url') as string,
-      icon: formData.get('icon') as string,
+      icon: addFormIcon,
     };
 
-    addHeaderLink(newLink);
+    await addHeaderLink(newLink);
     setShowAddForm(false);
+    setAddFormIcon('');
     toast.success('Header linki eklendi');
 
     // Reset form
     e.currentTarget.reset();
   };
 
-  const handleEdit = (e: React.FormEvent<HTMLFormElement>, linkId: string) => {
+  const handleEdit = async (e: React.FormEvent<HTMLFormElement>, linkId: string) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    const currentLink = config.header_links.find(l => l.id === linkId);
 
-    updateHeaderLink(linkId, {
+    await updateHeaderLink(linkId, {
       title: formData.get('title') as string,
       subtitle: formData.get('subtitle') as string,
       url: formData.get('url') as string,
-      icon: formData.get('icon') as string,
+      icon: editFormIcons[linkId] || currentLink?.icon || '',
     });
 
     setEditingId(null);
+    setEditFormIcons(prev => {
+      const newData = { ...prev };
+      delete newData[linkId];
+      return newData;
+    });
     toast.success('Header linki güncellendi');
   };
 
-  const handleDelete = (linkId: string, title: string) => {
+  const handleDelete = async (linkId: string, title: string) => {
     if (confirm(`"${title}" linkini silmek istediğinizden emin misiniz?`)) {
-      deleteHeaderLink(linkId);
+      await deleteHeaderLink(linkId);
       toast.success('Header linki silindi');
     }
   };
@@ -81,7 +98,7 @@ export default function HeaderLinksTab() {
           </div>
           <Button
             onClick={() => setShowAddForm(true)}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-green-600 hover:bg-green-700 text-white"
             disabled={showAddForm}
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -93,13 +110,13 @@ export default function HeaderLinksTab() {
         {showAddForm && (
           <Card className="bg-slate-700/50 border-slate-600">
             <CardHeader>
-              <CardTitle className="text-white text-lg">Yeni Link Ekle</CardTitle>
+              <CardTitle className="text-white text-lg">Yeni Header Link Ekle</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleAdd} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="add-title" className="text-white">Başlık</Label>
+                    <Label htmlFor="add-title" className="text-white">Başlık *</Label>
                     <Input
                       id="add-title"
                       name="title"
@@ -109,7 +126,7 @@ export default function HeaderLinksTab() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="add-subtitle" className="text-white">Alt Başlık</Label>
+                    <Label htmlFor="add-subtitle" className="text-white">Alt Başlık *</Label>
                     <Input
                       id="add-subtitle"
                       name="subtitle"
@@ -121,7 +138,7 @@ export default function HeaderLinksTab() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="add-url" className="text-white">URL</Label>
+                  <Label htmlFor="add-url" className="text-white">URL *</Label>
                   <Input
                     id="add-url"
                     name="url"
@@ -132,26 +149,26 @@ export default function HeaderLinksTab() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="add-icon" className="text-white">Icon URL</Label>
-                  <Input
-                    id="add-icon"
-                    name="icon"
-                    required
-                    placeholder="img/duyuru.png"
-                    className="bg-slate-600 border-slate-500 text-white placeholder:text-gray-400"
-                  />
-                </div>
+                <FileUpload
+                  label="İkon Görseli *"
+                  value={addFormIcon}
+                  onChange={(file) => setAddFormIcon(file || '')}
+                  placeholder="İkon görseli seçin (PNG, SVG, JPG)"
+                  accept="image/*"
+                />
 
-                <div className="flex gap-2">
-                  <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                <div className="flex gap-2 pt-4 border-t border-slate-600">
+                  <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white">
                     <Save className="w-4 h-4 mr-2" />
                     Kaydet
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setShowAddForm(false)}
+                    onClick={() => {
+                      setShowAddForm(false);
+                      setAddFormIcon('');
+                    }}
                     className="border-slate-600 text-white hover:bg-slate-700"
                   >
                     <X className="w-4 h-4 mr-2" />
@@ -179,7 +196,7 @@ export default function HeaderLinksTab() {
                     <form onSubmit={(e) => handleEdit(e, link.id)} className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <Label className="text-white">Başlık</Label>
+                          <Label className="text-white">Başlık *</Label>
                           <Input
                             name="title"
                             defaultValue={link.title}
@@ -188,7 +205,7 @@ export default function HeaderLinksTab() {
                           />
                         </div>
                         <div className="space-y-2">
-                          <Label className="text-white">Alt Başlık</Label>
+                          <Label className="text-white">Alt Başlık *</Label>
                           <Input
                             name="subtitle"
                             defaultValue={link.subtitle}
@@ -199,7 +216,7 @@ export default function HeaderLinksTab() {
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-white">URL</Label>
+                        <Label className="text-white">URL *</Label>
                         <Input
                           name="url"
                           type="url"
@@ -209,20 +226,21 @@ export default function HeaderLinksTab() {
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <Label className="text-white">Icon URL</Label>
-                        <Input
-                          name="icon"
-                          defaultValue={link.icon}
-                          required
-                          className="bg-slate-600 border-slate-500 text-white"
-                        />
-                      </div>
+                      <FileUpload
+                        label="İkon Görseli"
+                        value={editFormIcons[link.id] || link.icon}
+                        onChange={(file) => setEditFormIcons(prev => ({
+                          ...prev,
+                          [link.id]: file || ''
+                        }))}
+                        placeholder="İkon görseli seçin"
+                        accept="image/*"
+                      />
 
-                      <div className="flex gap-2">
-                        <Button type="submit" size="sm" className="bg-blue-600 hover:bg-blue-700">
+                      <div className="flex gap-2 pt-4 border-t border-slate-600">
+                        <Button type="submit" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
                           <Save className="w-4 h-4 mr-2" />
-                          Kaydet
+                          Güncelle
                         </Button>
                         <Button
                           type="button"
@@ -239,20 +257,31 @@ export default function HeaderLinksTab() {
                   ) : (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-slate-600 rounded-lg flex items-center justify-center">
-                          <img
-                            src={link.icon}
-                            alt="Icon"
-                            className="w-6 h-6"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display = 'none';
-                            }}
-                          />
+                        <div className="w-12 h-12 bg-slate-600 rounded-lg flex items-center justify-center overflow-hidden">
+                          {link.icon ? (
+                            <img
+                              src={link.icon}
+                              alt={link.title}
+                              className="w-8 h-8 object-contain"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          ) : (
+                            <Link className="w-6 h-6 text-gray-400" />
+                          )}
                         </div>
                         <div>
                           <p className="text-white font-medium">{link.title}</p>
                           <p className="text-sm text-gray-400">{link.subtitle}</p>
-                          <p className="text-xs text-blue-400 break-all">{link.url}</p>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-400 hover:text-blue-300 break-all"
+                          >
+                            {link.url}
+                          </a>
                         </div>
                       </div>
                       <div className="flex gap-2">
@@ -288,9 +317,10 @@ export default function HeaderLinksTab() {
               <h4 className="text-purple-200 font-medium mb-2">Header Link Bilgileri</h4>
               <ul className="text-purple-100 text-sm space-y-1">
                 <li>• Header linkleri site üst kısmında buton olarak görünür</li>
-                <li>• Icon URL'leri görsellerin tam yolunu içermelidir</li>
+                <li>• İkon görselleri otomatik olarak 24x24 boyutuna optimize edilir</li>
                 <li>• Tüm linkler yeni sekmede açılır</li>
                 <li>• Sıralama yukarıdan aşağıya soldan sağa doğrudur</li>
+                <li>• PNG, SVG, JPG formatları desteklenir</li>
               </ul>
             </div>
           </div>

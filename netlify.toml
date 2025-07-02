@@ -2,11 +2,28 @@
   remote_images = ["https://source.unsplash.com/.*", "https://images.unsplash.com/.*", "https://ext.same-assets.com/.*", "https://ugc.same-assets.com/.*"]
 
 [build]
-  command = "bun run build"
   publish = ".next"
+  command = "bun run build"
 
 [build.environment]
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  # Supabase environment variables - bu değerleri Netlify dashboard'dan ayarlayın
+  # NEXT_PUBLIC_SUPABASE_URL = "https://your-project.supabase.co"
+  # NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key"
+
+[context.deploy-preview.environment]
+  # Deploy preview için aynı environment variables kullanılır
+
+[functions]
+  # Netlify Functions için konfigürasyon
+  directory = "netlify/functions"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

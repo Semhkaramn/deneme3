@@ -12,11 +12,11 @@ import { toast } from 'sonner';
 export default function SiteConfigTab() {
   const { config, updateSiteConfig } = useConfig();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    updateSiteConfig({
+    await updateSiteConfig({
       title: formData.get('title') as string,
       description: formData.get('description') as string,
       url: formData.get('url') as string,
@@ -25,15 +25,15 @@ export default function SiteConfigTab() {
     toast.success('Site konfigürasyonu güncellendi');
   };
 
-  const handleFaviconChange = (file: string | null) => {
-    updateSiteConfig({
+  const handleFaviconChange = async (file: string | null) => {
+    await updateSiteConfig({
       favicon: file || ''
     });
     toast.success('Favicon güncellendi');
   };
 
-  const handleLogoChange = (file: string | null) => {
-    updateSiteConfig({
+  const handleLogoChange = async (file: string | null) => {
+    await updateSiteConfig({
       logo: file || ''
     });
     toast.success('Logo güncellendi');

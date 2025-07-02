@@ -6,20 +6,26 @@ export interface SiteConfig {
   url: string;
 }
 
+export interface ThemeColors {
+  bg: string;
+  menu: string;
+  card: string;
+  card2: string;
+}
+
 export interface SocialLinks {
   telegram_main: string;
   telegram_announcement: string;
   telegram_chat: string;
   instagram: string;
   youtube: string;
+  header_links: HeaderLink[];
 }
 
 export interface CategoriesControl {
   show_left_fix: boolean;
   show_right_fix: boolean;
   show_vip_sites: boolean;
-  show_diamond_sites: boolean;
-  show_normal_sites: boolean;
   show_animated_hover: boolean;
   show_slider_banner: boolean;
   show_scrolling_banner: boolean;
@@ -57,6 +63,7 @@ export interface Site {
   desc: [string, string];
   sitepic: string;
   background_image?: string;
+  slider_image?: string;
   color: string;
   button_text: string;
 }
@@ -64,6 +71,12 @@ export interface Site {
 export interface BottomBanner {
   sites: string[];
   rotation_interval: number;
+}
+
+export interface SiteLimits {
+  left_fix: number;
+  right_fix: number;
+  animated_hover: number;
 }
 
 export interface Categories {
@@ -76,8 +89,14 @@ export interface Categories {
   bottom_banner: BottomBanner;
 }
 
+export interface AdminSettings {
+  auto_logout_minutes: number;
+  session_timeout: number;
+}
+
 export interface Configuration {
   site_config: SiteConfig;
+  theme_colors: ThemeColors;
   categories_control: CategoriesControl;
   social_links: SocialLinks;
   header_links: HeaderLink[];
@@ -85,4 +104,6 @@ export interface Configuration {
   footer: Footer;
   sites: Site[];
   categories: Categories;
+  site_limits: SiteLimits;
+  admin_settings: AdminSettings;
 }

@@ -12,11 +12,11 @@ import { MessageCircle, Instagram, Youtube, Send } from 'lucide-react';
 export default function SocialLinksTab() {
   const { config, updateSocialLinks } = useConfig();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    updateSocialLinks({
+    await updateSocialLinks({
       telegram_main: formData.get('telegram_main') as string,
       telegram_announcement: formData.get('telegram_announcement') as string,
       telegram_chat: formData.get('telegram_chat') as string,

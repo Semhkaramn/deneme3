@@ -1,138 +1,197 @@
-# 🎰 Sago Casino Admin Panel
+# Sago Casino Admin Panel
 
-Modern ve güçlü casino site yönetim paneli. Real-time güncellemeler ile site konfigürasyonunu kolayca yönetin.
+Bu proje, casino sitelerinin konfigürasyonunu yönetmek için geliştirilmiş modern bir admin paneli ve site önizleme sistemidir.
 
-## ✨ Özellikler
+## 🚀 Özellikler
 
-- 🔐 **Güvenli Giriş Sistemi** - Çoklu admin desteği
-- 🎨 **Tema Yönetimi** - Renk paletini özelleştirin
-- 📱 **Responsive Tasarım** - Tüm cihazlarda mükemmel görünüm
-- ⚡ **Real-time Güncelleme** - Değişiklikler anında yansır
-- 🖼️ **Görsel Yükleme** - Logo ve arka plan yönetimi
-- 🔄 **Kategori Sıralaması** - Drag & drop stil kontroller
-- 🌐 **Sosyal Medya Entegrasyonu** - Telegram, Instagram linkleri
-- 🎯 **Popup Yönetimi** - Özelleştirilebilir popup sistemleri
+- **📱 Responsive Admin Panel** - Tüm cihazlarda mükemmel çalışır
+- **🎨 Real-time Preview** - Değişiklikleri anında önizleme
+- **🔄 Export/Import Sistem** - Konfigürasyonları tarayıcılar arası aktarım
+- **☁️ Cloud Sync** - Supabase ile bulut senkronizasyonu
+- **🎯 Site Yönetimi** - Unlimited site ekleme ve kategori düzenleme
+- **🎭 Tema Düzenleme** - Özelleştirilebilir renk şeması
+- **📊 Analytics Ready** - Gelecek güncellemeler için analitik altyapısı
 
-## 🚀 Kurulum
+## 🛠️ Kurulum
 
-### Gereksinimler
-- Node.js 18+
-- Bun (önerilen) veya npm/yarn
-
-### Adımlar
-
-1. **Repository'yi klonlayın**
+### 1. Projeyi Klonlayın
 ```bash
-git clone https://github.com/kullanici-adi/deneme3.git
-cd deneme3
-```
-
-2. **Bağımlılıkları yükleyin**
-```bash
+git clone <repo-url>
+cd sago-casino-admin
 bun install
-# veya
-npm install
 ```
 
-3. **Development server'ı başlatın**
+### 2. Development Server'ı Başlatın
 ```bash
 bun dev
-# veya
-npm run dev
 ```
 
-4. **Tarayıcıda açın**: http://localhost:3000
+### 3. Admin Paneli Erişimi
+- URL: `http://localhost:3000/admin`
+- Kullanıcı Adı: `admin`
+- Şifre: `admin123`
 
-## 🔑 Giriş Bilgileri
+## ☁️ Cloud Sync Kurulumu (Opsiyonel)
 
-### Normal Admin
-- **Kullanıcı Adı:** `admin`
-- **Şifre:** `admin123`
+Cloud sync özelliği, konfigürasyonlarınızı bulutta saklayıp farklı cihazlar arasında paylaşmanızı sağlar.
 
-*Bu bilgiler admin panelinden değiştirilebilir*
+### Supabase Kurulumu
 
-### Super Admin (Gizli)
-- Özel yetkili giriş mevcut
-- Kalıcı erişim garantili
+1. **Supabase Hesabı Oluşturun**
+   - [supabase.com](https://supabase.com) adresinde ücretsiz hesap açın
+   - Yeni proje oluşturun
 
-## 📊 Admin Panel Sekmeleri
+2. **Database Tablosu Oluşturun**
+   Supabase SQL Editor'da şu komutu çalıştırın:
+   ```sql
+   CREATE TABLE configurations (
+     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+     share_code VARCHAR(10) UNIQUE NOT NULL,
+     configuration JSONB NOT NULL,
+     description TEXT,
+     access_count INTEGER DEFAULT 0,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+   );
 
-| Sekme | Açıklama |
-|-------|----------|
-| 🌐 **Site** | Temel site bilgileri, logo, favicon |
-| 🎨 **Tema** | Renk paleti, giriş bilgileri |
-| 🔧 **Kategoriler** | Bölüm görünürlük kontrolleri |
-| 💬 **Sosyal** | Telegram, Instagram linkleri |
-| 🔗 **Header** | Üst menü linkleri |
-| 🔔 **Popup** | Popup banner ayarları |
-| ⚙️ **Siteler** | Site yönetimi ve sıralama |
+   CREATE INDEX idx_configurations_share_code ON configurations(share_code);
+   ```
 
-## 🌐 Deployment
+3. **Environment Variables**
+   `.env.local` dosyasını düzenleyin:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+   ```
+
+4. **RLS (Row Level Security) - Opsiyonel**
+   Güvenlik için RLS politikaları ekleyebilirsiniz:
+   ```sql
+   ALTER TABLE configurations ENABLE ROW LEVEL SECURITY;
+
+   CREATE POLICY "Allow read access" ON configurations
+   FOR SELECT USING (true);
+
+   CREATE POLICY "Allow insert access" ON configurations
+   FOR INSERT WITH CHECK (true);
+   ```
+
+### Netlify Deployment için Cloud Sync
+
+1. **Netlify Dashboard'da Environment Variables**
+   - Site Settings > Environment variables
+   - `NEXT_PUBLIC_SUPABASE_URL` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY` ekleyin
+
+2. **Build Settings**
+   - Build command: `bun run build`
+   - Publish directory: `.next`
+
+## 📋 Kullanım
+
+### Admin Panel Sekmeler
+
+1. **Site Config** - Temel site bilgileri (logo, favicon, title)
+2. **Tema** - Renk şeması düzenleme
+3. **Kategoriler** - Hangi bölümlerin aktif olacağı
+4. **Sosyal** - Sosyal medya linkleri
+5. **Header** - Header linkleri ve ikonlar
+6. **Popup** - Popup banner ayarları
+7. **Siteler** - Site ekleme, düzenleme ve kategori sıralaması
+8. **Yedek** - Export/import ve cloud sync
+
+### Cloud Sync Kullanımı
+
+1. **Ayarları Cloud'a Yükleme**
+   - Yedek sekmesine gidin
+   - "Cloud'a Yükle" butonuna basın
+   - Aldığınız 6 haneli kodu saklayın
+
+2. **Ayarları Başka Cihazda İndirme**
+   - Diğer cihazda admin panelini açın
+   - Yedek sekmesinde share code'u girin
+   - "Cloud'dan İndir" butonuna basın
+
+### Tarayıcılar Arası Aktarım
+
+Cloud sync kullanmıyorsanız:
+
+1. **Export**: "Dışa Aktar" > "Panoya Kopyala" veya "Dosya İndir"
+2. **Import**: Diğer tarayıcıda "İçe Aktar" bölümüne yapıştırın
+
+## 🔧 Konfigürasyon
+
+### Site Limitleri
+
+Bazı kategorilerde limit vardır:
+- Sol/Sağ Sabit Banner: Her birine 1 site
+- Animasyonlu Hover: 4 site
+- Diğer kategoriler: Sınırsız
+
+### Dosya Yükleme
+
+- Desteklenen formatlar: JPG, PNG, GIF, SVG, ICO
+- Otomatik color extraction logo'dan
+- Base64 encoding ile saklama
+
+### Auto-logout
+
+- Varsayılan: 30 dakika inaktivite
+- Ayarlanabilir admin settings'den
+- Countdown timer ile uyarı
+
+## 📱 Responsive Design
+
+- **Desktop**: Tam featured panel
+- **Tablet**: Optimized layout
+- **Mobile**: Touch-friendly interface
+
+## 🔒 Güvenlik
+
+- localStorage ile client-side saklama
+- Supabase RLS ile güvenli cloud storage
+- Environment variables ile API key koruması
+- Admin credentials localStorage'da
+
+## 🚀 Deployment
 
 ### Netlify (Önerilen)
-```bash
-# Build komutu
-bun run build
 
-# Publish dizini
-.next
-```
+1. GitHub repo'ya push edin
+2. Netlify'da site oluşturun
+3. Environment variables ekleyin
+4. Auto-deploy aktif
 
-### Vercel
-```bash
-vercel --prod
-```
+### Diğer Platformlar
 
-### Manual Build
-```bash
-bun run build
-bun start
-```
+- Vercel, Railway, Heroku uyumlu
+- Static export destekli
+- Next.js 15+ gereksinimleri
 
-## 🛠️ Teknik Detaylar
+## 🆘 Sorun Giderme
 
-- **Framework:** Next.js 15+
-- **UI:** Tailwind CSS + shadcn/ui
-- **State:** LocalStorage + React Hooks
-- **Icons:** Lucide React
-- **Runtime:** Bun
-- **Deployment:** Netlify/Vercel
+### Cloud Sync Çalışmıyor
+- Supabase URL/Key kontrol edin
+- Console'da error mesajlarına bakın
+- Database tablosunun oluşturulduğundan emin olun
 
-## 📱 Özellik Detayları
+### LocalStorage Silinirse
+- Export/import kullanın
+- Cloud sync varsa share code ile geri yükleyin
+- Reset butonu ile defaults'a dönün
 
-### Real-time Güncelleme
-- Admin panelindeki değişiklikler anında ana sitede yansır
-- localStorage üzerinden senkronizasyon
-- Multi-tab desteği
+### Performance
+- Görseller otomatik optimize edilir
+- Lazy loading aktif
+- Minimal bundle size
 
-### Güvenlik
-- Session tabanlı kimlik doğrulama
-- URL koruma sistemi
-- Otomatik yönlendirme
+## 📄 Lisans
 
-### Görsel Yönetimi
-- File upload sistemi
-- Base64 encoding
-- Otomatik optimizasyon
+MIT License - Kendi projelerinizde özgürce kullanabilirsiniz.
 
 ## 🤝 Katkıda Bulunma
 
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit yapın (`git commit -m 'Add amazing feature'`)
-4. Push edin (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
-## 📝 Lisans
-
-Bu proje özel kullanım içindir. Tüm hakları saklıdır.
-
-## 🆘 Destek
-
-Sorun yaşıyorsanız:
-- Issue açın
-- Telegram: [@sagocasino](https://t.me/sagocasino)
+Pull request'ler ve issue'lar hoş karşılanır!
 
 ---
 
-⭐ **Beğendiyseniz yıldız verin!**
+**Sago Casino Admin Panel** - Modern, güvenli ve kullanıcı dostu casino site yönetimi.

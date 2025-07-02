@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,31 +10,37 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useConfig } from '@/hooks/use-config';
 import { toast } from 'sonner';
-import { Bell, Timer, MessageSquare } from 'lucide-react';
+import { Bell, Timer, MessageSquare, Save } from 'lucide-react';
 
 export default function PopupSettingsTab() {
   const { config, updatePopupSettings } = useConfig();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // Local state for real-time preview
+  const [previewData, setPreviewData] = useState({
+    enabled: config.popup_settings.enabled,
+    delay: config.popup_settings.delay,
+    title: config.popup_settings.title,
+    main_text: config.popup_settings.main_text,
+    sub_text: config.popup_settings.sub_text,
+    site_ref: config.popup_settings.site_ref,
+  });
+
+  const handleInputChange = (field: string, value: string | number | boolean) => {
+    setPreviewData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
 
-    updatePopupSettings({
-      enabled: formData.get('enabled') === 'on',
-      delay: Number.parseInt(formData.get('delay') as string) || 3000,
-      title: formData.get('title') as string,
-      main_text: formData.get('main_text') as string,
-      sub_text: formData.get('sub_text') as string,
-      site_ref: formData.get('site_ref') as string,
-    });
-
-    toast.success('Popup ayarları güncellendi');
+    await updatePopupSettings(previewData);
+    toast.success('Popup ayarları kaydedildi');
   };
 
   const handleToggle = (enabled: boolean) => {
-    updatePopupSettings({ enabled });
-    toast.success(`Popup ${enabled ? 'etkinleştirildi' : 'devre dışı bırakıldı'}`);
+    setPreviewData(prev => ({ ...prev, enabled }));
   };
+
+  const selectedSite = config.sites.find(site => site.site === previewData.site_ref);
 
   return (
     <Card className="bg-slate-800/50 border-slate-700">
@@ -58,13 +65,13 @@ export default function PopupSettingsTab() {
               </p>
             </div>
             <Switch
-              checked={config.popup_settings.enabled}
+              checked={previewData.enabled}
               onCheckedChange={handleToggle}
             />
           </div>
 
           {/* Settings - Only show if enabled */}
-          {config.popup_settings.enabled && (
+          {previewData.enabled && (
             <>
               {/* Delay Setting */}
               <div className="space-y-2">
@@ -79,7 +86,8 @@ export default function PopupSettingsTab() {
                   min="1000"
                   max="10000"
                   step="500"
-                  defaultValue={config.popup_settings.delay}
+                  value={previewData.delay}
+                  onChange={(e) => handleInputChange('delay', Number(e.target.value))}
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-gray-400"
                 />
                 <p className="text-xs text-gray-400">
@@ -93,7 +101,8 @@ export default function PopupSettingsTab() {
                 <Input
                   id="title"
                   name="title"
-                  defaultValue={config.popup_settings.title}
+                  value={previewData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
                   placeholder="TELEGRAM KOD KANALI"
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-gray-400"
                 />
@@ -105,7 +114,8 @@ export default function PopupSettingsTab() {
                 <Textarea
                   id="main_text"
                   name="main_text"
-                  defaultValue={config.popup_settings.main_text}
+                  value={previewData.main_text}
+                  onChange={(e) => handleInputChange('main_text', e.target.value)}
                   placeholder="TELEGRAM KOD KANALIMIZA KATILIN KAZANMAYA BAŞLAYIN!"
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-gray-400"
                   rows={3}
@@ -118,7 +128,8 @@ export default function PopupSettingsTab() {
                 <Input
                   id="sub_text"
                   name="sub_text"
-                  defaultValue={config.popup_settings.sub_text}
+                  value={previewData.sub_text}
+                  onChange={(e) => handleInputChange('sub_text', e.target.value)}
                   placeholder="HERGÜN YÜZLERCE BEDAVA KOD"
                   className="bg-slate-700 border-slate-600 text-white placeholder:text-gray-400"
                 />
@@ -127,7 +138,10 @@ export default function PopupSettingsTab() {
               {/* Site Reference */}
               <div className="space-y-2">
                 <Label htmlFor="site_ref" className="text-white">Site Referansı</Label>
-                <Select name="site_ref" defaultValue={config.popup_settings.site_ref}>
+                <Select
+                  value={previewData.site_ref}
+                  onValueChange={(value) => handleInputChange('site_ref', value)}
+                >
                   <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                     <SelectValue placeholder="Popup'ta gösterilecek siteyi seçin" />
                   </SelectTrigger>
@@ -150,31 +164,45 @@ export default function PopupSettingsTab() {
                 </p>
               </div>
 
-              {/* Preview */}
+              {/* Real-time Preview */}
               <div className="p-4 bg-slate-900/50 border border-slate-600 rounded-lg">
                 <h4 className="text-white font-medium mb-3 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4" />
-                  Popup Önizlemesi
+                  Canlı Popup Önizlemesi
                 </h4>
                 <div className="bg-slate-800 border border-slate-600 rounded-lg p-4 max-w-sm mx-auto text-center">
                   <h3 className="text-yellow-400 text-sm font-bold mb-2">
-                    {config.popup_settings.title || 'Popup Başlığı'}
+                    {previewData.title || 'Popup Başlığı'}
                   </h3>
                   <div className="w-16 h-16 bg-slate-700 rounded-lg mx-auto mb-3 flex items-center justify-center">
-                    <Bell className="w-8 h-8 text-gray-400" />
+                    {selectedSite && selectedSite.sitepic ? (
+                      <img
+                        src={selectedSite.sitepic}
+                        alt={selectedSite.site}
+                        className="w-12 h-12 object-contain rounded"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <Bell className="w-8 h-8 text-gray-400" />
+                    )}
                   </div>
                   <h1 className="text-white font-bold text-lg mb-2">
-                    {config.popup_settings.main_text || 'Ana Metin'}
+                    {previewData.main_text || 'Ana Metin'}
                   </h1>
                   <small className="text-gray-400 block mb-3">
-                    {config.popup_settings.sub_text || 'Alt Metin'}
+                    {previewData.sub_text || 'Alt Metin'}
                   </small>
-                  <div className="bg-blue-600 text-white py-2 px-4 rounded-full text-sm font-bold">
-                    GİRİŞ YAP
+                  <div
+                    className="text-white py-2 px-4 rounded-full text-sm font-bold cursor-pointer"
+                    style={{ backgroundColor: selectedSite?.color || '#3B82F6' }}
+                  >
+                    {selectedSite?.button_text || 'GİRİŞ YAP'}
                   </div>
                 </div>
                 <p className="text-xs text-gray-400 mt-2 text-center">
-                  Gerçek popup'ta seçilen sitenin logosu görünecek
+                  {previewData.delay / 1000} saniye sonra görünecek
                 </p>
               </div>
             </>
@@ -196,7 +224,8 @@ export default function PopupSettingsTab() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+            <Save className="w-4 h-4 mr-2" />
             Popup Ayarlarını Kaydet
           </Button>
         </form>
