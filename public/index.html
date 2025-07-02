@@ -329,6 +329,12 @@
             padding: 0 !important;
             min-height: 0 !important;
         }
+        /* boş kutu */
+        .img-container::after {
+           content: "";
+           flex: 0 0 calc(25% - 10px);
+           height: 0;
+        }
 
         .row[style*="display: none"] {
             height: 0 !important;
