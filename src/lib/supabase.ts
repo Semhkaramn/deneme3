@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { Configuration } from './types';
 
 // Public Supabase URL ve Key (güvenli, RLS ile korunacak)
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://example.supabase.co';
@@ -10,7 +11,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 export interface CloudConfig {
   id?: string;
   share_code: string;
-  configuration: any;
+  configuration: Configuration;
   created_at?: string;
   updated_at?: string;
   access_count?: number;
@@ -20,7 +21,7 @@ export interface CloudConfig {
 // Cloud configuration functions
 export class CloudConfigStore {
   // Konfigürasyonu cloud'a yükle ve share code döndür
-  static async uploadConfig(config: any, description?: string): Promise<string> {
+  static async uploadConfig(config: Configuration, description?: string): Promise<string> {
     try {
       // Random share code oluştur (6 haneli)
       const shareCode = Math.random().toString(36).substr(2, 6).toUpperCase();
@@ -46,7 +47,7 @@ export class CloudConfigStore {
   }
 
   // Share code ile konfigürasyonu indir
-  static async downloadConfig(shareCode: string): Promise<any> {
+  static async downloadConfig(shareCode: string): Promise<Configuration> {
     try {
       const { data, error } = await supabase
         .from('configurations')

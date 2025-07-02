@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function ConfigBackupTab() {
-  const { config, importConfig, resetConfig } = useConfig();
+  const { config, exportConfig, importConfig, resetConfig } = useConfig();
 
   // Check cloud availability on mount
   useEffect(() => {
@@ -151,7 +151,7 @@ export default function ConfigBackupTab() {
     setIsCloudDownloading(true);
     try {
       const cloudConfig = await CloudConfigStore.downloadConfig(downloadCode);
-      const success = importConfig(JSON.stringify(cloudConfig));
+      const success = await importConfig(JSON.stringify(cloudConfig));
       if (success) {
         toast.success('Konfigürasyon cloud\'dan indirildi ve uygulandı!');
         window.location.reload();
