@@ -13,7 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   // Sabit admin logo
-  const adminLogo = 'https://i.hizliresim.com/ccqzxp2.png';
+  const adminLogo = 'https://hizliresim.com/ne4p3my';
   const [credentials, setCredentials] = useState({
     username: '',
     password: ''
